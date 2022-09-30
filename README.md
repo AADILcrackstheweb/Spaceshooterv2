@@ -1,2 +1,13 @@
 # Spaceshooterv2
 An attractive shooter game using pygame
+
+You can use assets as main particles and gameplay characters.
+There is sound required to make the game attractive.
+Make valid changes if necessary.
+Just edit assets to personalize the game.
+
+Thank You
+
+Yours sincerely,
+Aadil
+_THE OWNER
