@@ -1,6 +1,6 @@
 
 from __future__ import division
-import pygame as pyg
+import pygame as pym
 import random
 from os import path
 
@@ -29,54 +29,54 @@ YELLOW = (255, 255, 0)
 ###############################
 ## to placed in "__init__.py" later
 ## initialize pygame and create window
-pyg.init()
-pyg.mixer.init()  ## For sound
-screen = pyg.display.set_mode((WIDTH, HEIGHT))
-pyg.display.set_caption("Space Shooter")
-clock = pyg.time.Clock()     ## For syncing the FPS
+pym.init()
+pym.mixer.init()  ## For sound
+screen = pym.display.set_mode((WIDTH, HEIGHT))
+pym.display.set_caption("Space Shooter")
+clock = pym.time.Clock()     ## For syncing the FPS
 ###############################
 
-font_name = pyg.font.match_font('arial')
+font_name = pym.font.match_font('arial')
 
 def main_menu():
     global screen
 
-    menu_song = pyg.mixer.music.load(path.join(sound_folder, "menu.ogg"))
-    pyg.mixer.music.play(-1)
+    menu_song = pym.mixer.music.load(path.join(sound_folder, "menu.ogg"))
+    pym.mixer.music.play(-1)
 
-    title = pyg.image.load(path.join(img_dir, "main.png")).convert()
-    title = pyg.transform.scale(title, (WIDTH, HEIGHT), screen)
+    title = pym.image.load(path.join(img_dir, "main.png")).convert()
+    title = pym.transform.scale(title, (WIDTH, HEIGHT), screen)
 
     screen.blit(title, (0,0))
-    pyg.display.update()
+    pym.display.update()
 
     while True:
-        ev = pyg.event.poll()
-        if ev.type == pyg.KEYDOWN:
-            if ev.key == pyg.K_RETURN:
+        ev = pym.event.poll()
+        if ev.type == pym.KEYDOWN:
+            if ev.key == pym.K_RETURN:
                 break
-            elif ev.key == pyg.K_q:
-                pyg.quit()
+            elif ev.key == pym.K_q:
+                pym.quit()
                 quit()
-        elif ev.type == pyg.QUIT:
-                pyg.quit()
+        elif ev.type == pym.QUIT:
+                pym.quit()
                 quit() 
         else:
             draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
             draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
-            pyg.display.update()
+            pym.display.update()
 
-    #pyg.mixer.music.stop()
-    ready = pyg.mixer.Sound(path.join(sound_folder,'getready.ogg'))
+    #pym.mixer.music.stop()
+    ready = pym.mixer.Sound(path.join(sound_folder,'getready.ogg'))
     ready.play()
     screen.fill(BLACK)
     draw_text(screen, "GET READY!", 40, WIDTH/2, HEIGHT/2)
-    pyg.display.update()
+    pym.display.update()
     
 
 def draw_text(surf, text, size, x, y):
     ## selecting a cross platform font to display the score
-    font = pyg.font.Font(font_name, size)
+    font = pym.font.Font(font_name, size)
     text_surface = font.render(text, True, WHITE)       ## True denotes the font to be anti-aliased 
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
@@ -91,10 +91,10 @@ def draw_shield_bar(surf, x, y, pct):
     # BAR_LENGTH = 100
     # BAR_HEIGHT = 10
     fill = (pct / 100) * BAR_LENGTH
-    outline_rect = pyg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
-    fill_rect = pyg.Rect(x, y, fill, BAR_HEIGHT)
-    pyg.draw.rect(surf, GREEN, fill_rect)
-    pyg.draw.rect(surf, WHITE, outline_rect, 2)
+    outline_rect = pym.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+    fill_rect = pym.Rect(x, y, fill, BAR_HEIGHT)
+    pym.draw.rect(surf, GREEN, fill_rect)
+    pym.draw.rect(surf, WHITE, outline_rect, 2)
 
 
 def draw_lives(surf, x, y, lives, img):
@@ -111,19 +111,19 @@ def newmob():
     all_sprites.add(mob_element)
     mobs.add(mob_element)
 
-class Explosion(pyg.sprite.Sprite):
+class Explosion(pym.sprite.Sprite):
     def __init__(self, center, size):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         self.size = size
         self.image = explosion_anim[self.size][0]
         self.rect = self.image.get_rect()
         self.rect.center = center
         self.frame = 0 
-        self.last_update = pyg.time.get_ticks()
+        self.last_update = pym.time.get_ticks()
         self.frame_rate = 75
 
     def update(self):
-        now = pyg.time.get_ticks()
+        now = pym.time.get_ticks()
         if now - self.last_update > self.frame_rate:
             self.last_update = now
             self.frame += 1
@@ -136,11 +136,11 @@ class Explosion(pyg.sprite.Sprite):
                 self.rect.center = center
 
 
-class Player(pyg.sprite.Sprite):
+class Player(pym.sprite.Sprite):
     def __init__(self):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         ## scale the player img down
-        self.image = pyg.transform.scale(player_img, (50, 38))
+        self.image = pym.transform.scale(player_img, (50, 38))
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.radius = 20
@@ -149,21 +149,21 @@ class Player(pyg.sprite.Sprite):
         self.speedx = 0 
         self.shield = 100
         self.shoot_delay = 250
-        self.last_shot = pyg.time.get_ticks()
+        self.last_shot = pym.time.get_ticks()
         self.lives = 3
         self.hidden = False
-        self.hide_timer = pyg.time.get_ticks()
+        self.hide_timer = pym.time.get_ticks()
         self.power = 1
-        self.power_timer = pyg.time.get_ticks()
+        self.power_timer = pym.time.get_ticks()
 
     def update(self):
         ## time out for powerups
-        if self.power >=2 and pyg.time.get_ticks() - self.power_time > POWERUP_TIME:
+        if self.power >=2 and pym.time.get_ticks() - self.power_time > POWERUP_TIME:
             self.power -= 1
-            self.power_time = pyg.time.get_ticks()
+            self.power_time = pym.time.get_ticks()
 
         ## unhide 
-        if self.hidden and pyg.time.get_ticks() - self.hide_timer > 1000:
+        if self.hidden and pym.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
             self.rect.centerx = WIDTH / 2
             self.rect.bottom = HEIGHT - 30
@@ -173,14 +173,14 @@ class Player(pyg.sprite.Sprite):
         ## pressed 
 
         ## will give back a list of the keys which happen to be pressed down at that moment
-        keystate = pyg.key.get_pressed()     
-        if keystate[pyg.K_LEFT]:
+        keystate = pym.key.get_pressed()     
+        if keystate[pym.K_LEFT]:
             self.speedx = -5
-        elif keystate[pyg.K_RIGHT]:
+        elif keystate[pym.K_RIGHT]:
             self.speedx = 5
 
         #Fire weapons by holding spacebar
-        if keystate[pyg.K_SPACE]:
+        if keystate[pym.K_SPACE]:
             self.shoot()
 
         ## check for the borders at the left and right
@@ -193,7 +193,7 @@ class Player(pyg.sprite.Sprite):
 
     def shoot(self):
         ## to tell the bullet where to spawn
-        now = pyg.time.get_ticks()
+        now = pym.time.get_ticks()
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
             if self.power == 1:
@@ -226,18 +226,18 @@ class Player(pyg.sprite.Sprite):
 
     def powerup(self):
         self.power += 1
-        self.power_time = pyg.time.get_ticks()
+        self.power_time = pym.time.get_ticks()
 
     def hide(self):
         self.hidden = True
-        self.hide_timer = pyg.time.get_ticks()
+        self.hide_timer = pym.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
 
 
 # defines the enemies
-class Mob(pyg.sprite.Sprite):
+class Mob(pym.sprite.Sprite):
     def __init__(self):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         self.image_orig = random.choice(meteor_images)
         self.image_orig.set_colorkey(BLACK)
         self.image = self.image_orig.copy()
@@ -253,14 +253,14 @@ class Mob(pyg.sprite.Sprite):
         ## adding rotation to the mob element
         self.rotation = 0
         self.rotation_speed = random.randrange(-8, 8)
-        self.last_update = pyg.time.get_ticks()  ## time when the rotation has to happen
+        self.last_update = pym.time.get_ticks()  ## time when the rotation has to happen
         
     def rotate(self):
-        time_now = pyg.time.get_ticks()
+        time_now = pym.time.get_ticks()
         if time_now - self.last_update > 50: # in milliseconds
             self.last_update = time_now
             self.rotation = (self.rotation + self.rotation_speed) % 360 
-            new_image = pyg.transform.rotate(self.image_orig, self.rotation)
+            new_image = pym.transform.rotate(self.image_orig, self.rotation)
             old_center = self.rect.center
             self.image = new_image
             self.rect = self.image.get_rect()
@@ -278,9 +278,9 @@ class Mob(pyg.sprite.Sprite):
             self.speedy = random.randrange(1, 8)        ## for randomizing the speed of the Mob
 
 ## defines the sprite for Powerups
-class Pow(pyg.sprite.Sprite):
+class Pow(pym.sprite.Sprite):
     def __init__(self, center):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         self.type = random.choice(['shield', 'gun'])
         self.image = powerup_images[self.type]
         self.image.set_colorkey(BLACK)
@@ -299,9 +299,9 @@ class Pow(pyg.sprite.Sprite):
             
 
 ## defines the sprite for bullets
-class Bullet(pyg.sprite.Sprite):
+class Bullet(pym.sprite.Sprite):
     def __init__(self, x, y):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         self.image = bullet_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
@@ -322,9 +322,9 @@ class Bullet(pyg.sprite.Sprite):
         ## adding an event for it in Game loop
 
 ## FIRE ZE MISSILES
-class Missile(pyg.sprite.Sprite):
+class Missile(pym.sprite.Sprite):
     def __init__(self, x, y):
-        pyg.sprite.Sprite.__init__(self)
+        pym.sprite.Sprite.__init__(self)
         self.image = missile_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
@@ -342,16 +342,16 @@ class Missile(pyg.sprite.Sprite):
 ###################################################
 ## Load all game images
 
-background = pyg.image.load(path.join(img_dir, 'starfield.png')).convert()
+background = pym.image.load(path.join(img_dir, 'starfield.png')).convert()
 background_rect = background.get_rect()
 ## ^^ draw this rect first 
 
-player_img = pyg.image.load(path.join(img_dir, 'playerShip1_orange.png')).convert()
-player_mini_img = pyg.transform.scale(player_img, (25, 19))
+player_img = pym.image.load(path.join(img_dir, 'playerShip1_orange.png')).convert()
+player_mini_img = pym.transform.scale(player_img, (25, 19))
 player_mini_img.set_colorkey(BLACK)
-bullet_img = pyg.image.load(path.join(img_dir, 'laserRed16.png')).convert()
-missile_img = pyg.image.load(path.join(img_dir, 'missile.png')).convert_alpha()
-# meteor_img = pyg.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
+bullet_img = pym.image.load(path.join(img_dir, 'laserRed16.png')).convert()
+missile_img = pym.image.load(path.join(img_dir, 'missile.png')).convert_alpha()
+# meteor_img = pym.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
 meteor_images = []
 meteor_list = [
     'meteorBrown_big1.png',
@@ -364,7 +364,7 @@ meteor_list = [
 ]
 
 for image in meteor_list:
-    meteor_images.append(pyg.image.load(path.join(img_dir, image)).convert())
+    meteor_images.append(pym.image.load(path.join(img_dir, image)).convert())
 
 ## meteor explosion
 explosion_anim = {}
@@ -373,43 +373,43 @@ explosion_anim['sm'] = []
 explosion_anim['player'] = []
 for i in range(9):
     filename = 'regularExplosion0{}.png'.format(i)
-    img = pyg.image.load(path.join(img_dir, filename)).convert()
+    img = pym.image.load(path.join(img_dir, filename)).convert()
     img.set_colorkey(BLACK)
     ## resize the explosion
-    img_lg = pyg.transform.scale(img, (75, 75))
+    img_lg = pym.transform.scale(img, (75, 75))
     explosion_anim['lg'].append(img_lg)
-    img_sm = pyg.transform.scale(img, (32, 32))
+    img_sm = pym.transform.scale(img, (32, 32))
     explosion_anim['sm'].append(img_sm)
 
     ## player explosion
     filename = 'sonicExplosion0{}.png'.format(i)
-    img = pyg.image.load(path.join(img_dir, filename)).convert()
+    img = pym.image.load(path.join(img_dir, filename)).convert()
     img.set_colorkey(BLACK)
     explosion_anim['player'].append(img)
 
 ## load power ups
 powerup_images = {}
-powerup_images['shield'] = pyg.image.load(path.join(img_dir, 'shield_gold.png')).convert()
-powerup_images['gun'] = pyg.image.load(path.join(img_dir, 'bolt_gold.png')).convert()
+powerup_images['shield'] = pym.image.load(path.join(img_dir, 'shield_gold.png')).convert()
+powerup_images['gun'] = pym.image.load(path.join(img_dir, 'bolt_gold.png')).convert()
 
 
 ### Load all game sounds
-shooting_sound = pyg.mixer.Sound(path.join(sound_folder, 'pew.wav'))
-missile_sound = pyg.mixer.Sound(path.join(sound_folder, 'rocket.ogg'))
+shooting_sound = pym.mixer.Sound(path.join(sound_folder, 'pew.wav'))
+missile_sound = pym.mixer.Sound(path.join(sound_folder, 'rocket.ogg'))
 expl_sounds = []
 for sound in ['expl3.wav', 'expl6.wav']:
-    expl_sounds.append(pyg.mixer.Sound(path.join(sound_folder, sound)))
+    expl_sounds.append(pym.mixer.Sound(path.join(sound_folder, sound)))
 ## main background music
-#pyg.mixer.music.load(path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
-pyg.mixer.music.set_volume(0.2)      ## simmered the sound down a little
+#pym.mixer.music.load(path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
+pym.mixer.music.set_volume(0.2)      ## simmered the sound down a little
 
-player_die_sound = pyg.mixer.Sound(path.join(sound_folder, 'rumble1.ogg'))
+player_die_sound = pym.mixer.Sound(path.join(sound_folder, 'rumble1.ogg'))
 
 
 ## TODO: make the game music loop over again and again. play(loops=-1) isn't working
 # Error : 
 # TypeError: play() takes no keyword arguments
-#pyg.mixer.music.play()
+#pym.mixer.music.play()
 
 
 ## Game loop
@@ -418,23 +418,23 @@ menu_display = True
 while running:
     if menu_display:
         main_menu()
-        pyg.time.wait(3000)
+        pym.time.wait(3000)
 
         #Stop menu music
-        pyg.mixer.music.stop()
+        pym.mixer.music.stop()
         #Play the gameplay music
-        pyg.mixer.music.load(path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
-        pyg.mixer.music.play(-1)     ## makes the gameplay sound in an endless loop
+        pym.mixer.music.load(path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
+        pym.mixer.music.play(-1)     ## makes the gameplay sound in an endless loop
         
         menu_display = False
         
         ## group all the sprites together for ease of update
-        all_sprites = pyg.sprite.Group()
+        all_sprites = pym.sprite.Group()
         player = Player()
         all_sprites.add(player)
 
         ## spawn a group of mob
-        mobs = pyg.sprite.Group()
+        mobs = pym.sprite.Group()
         for i in range(8):      ## 8 mobs
             # mob_element = Mob()
             # all_sprites.add(mob_element)
@@ -442,26 +442,26 @@ while running:
             newmob()
 
         ## group for bullets
-        bullets = pyg.sprite.Group()
-        powerups = pyg.sprite.Group()
+        bullets = pym.sprite.Group()
+        powerups = pym.sprite.Group()
 
         #### Score board variable
         score = 0
         
     #1 Process input/events
     clock.tick(FPS)     ## will make the loop run at the same speed all the time
-    for event in pyg.event.get():        # gets all the events which have occured till now and keeps tab of them.
+    for event in pym.event.get():        # gets all the events which have occured till now and keeps tab of them.
         ## listening for the the X button at the top
-        if event.type == pyg.QUIT:
+        if event.type == pym.QUIT:
             running = False
 
         ## Press ESC to exit game
-        if event.type == pyg.KEYDOWN:
-            if event.key == pyg.K_ESCAPE:
+        if event.type == pym.KEYDOWN:
+            if event.key == pym.K_ESCAPE:
                 running = False
         # ## event for shooting the bullets
-        # elif event.type == pyg.KEYDOWN:
-        #     if event.key == pyg.K_SPACE:
+        # elif event.type == pym.KEYDOWN:
+        #     if event.key == pym.K_SPACE:
         #         player.shoot()      ## we have to define the shoot()  function
 
     #2 Update
@@ -470,7 +470,7 @@ while running:
 
     ## check if a bullet hit a mob
     ## now we have a group of bullets and a group of mob
-    hits = pyg.sprite.groupcollide(mobs, bullets, True, True)
+    hits = pym.sprite.groupcollide(mobs, bullets, True, True)
     ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
     ## as there will be no mob_elements left out 
     for hit in hits:
@@ -491,7 +491,7 @@ while running:
     #########################
 
     ## check if the player collides with the mob
-    hits = pyg.sprite.spritecollide(player, mobs, True, pyg.sprite.collide_circle)        ## gives back a list, True makes the mob element disappear
+    hits = pym.sprite.spritecollide(player, mobs, True, pym.sprite.collide_circle)        ## gives back a list, True makes the mob element disappear
     for hit in hits:
         player.shield -= hit.radius * 2
         expl = Explosion(hit.rect.center, 'sm')
@@ -507,7 +507,7 @@ while running:
             player.shield = 100
 
     ## if the player hit a power up
-    hits = pyg.sprite.spritecollide(player, powerups, True)
+    hits = pym.sprite.spritecollide(player, powerups, True)
     for hit in hits:
         if hit.type == 'shield':
             player.shield += random.randrange(10, 30)
@@ -520,7 +520,7 @@ while running:
     if player.lives == 0 and not death_explosion.alive():
         running = False
         # menu_display = True
-        # pyg.display.update()
+        # pym.display.update()
 
     #3 Draw/render
     screen.fill(BLACK)
@@ -535,6 +535,6 @@ while running:
     draw_lives(screen, WIDTH - 100, 5, player.lives, player_mini_img)
 
     ## Done after drawing everything to the screen
-    pyg.display.flip()       
+    pym.display.flip()       
 
-pyg.quit()
+pym.quit()
