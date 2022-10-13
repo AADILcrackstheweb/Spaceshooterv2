@@ -2,6 +2,7 @@
 from __future__ import division
 import pygame as pym
 import random
+import pandas
 from os import path
 
 ## assets folder
@@ -25,6 +26,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 ###############################
+###############################to make sure that every repositories work
 
 ###############################
 ## to placed in "__init__.py" later
