@@ -419,7 +419,7 @@ while running:
     if menu_display:
         main_menu()
         pym.time.wait(3000)
-
+        #Pause for 3000ms
         #Stop menu music
         pym.mixer.music.stop()
         #Play the gameplay music
@@ -487,11 +487,12 @@ while running:
             powerups.add(pow)
         newmob()        ## spawn a new mob
 
-    ## ^^ the above loop will create the amount of mob objects which were killed spawn again
+    ## the above loop will create the amount of mob objects which were killed spawn again
     #########################
 
     ## check if the player collides with the mob
-    hits = pym.sprite.spritecollide(player, mobs, True, pym.sprite.collide_circle)        ## gives back a list, True makes the mob element disappear
+    hits = pym.sprite.spritecollide(player, mobs, True, pym.sprite.collide_circle)       
+    ## gives back a list, True makes the mob element disappear
     for hit in hits:
         player.shield -= hit.radius * 2
         expl = Explosion(hit.rect.center, 'sm')
