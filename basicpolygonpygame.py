@@ -1,39 +1,39 @@
-import pygame  
+import pygame as pyg
 import sys  
 #Sprite class   
-class Sprite(pygame.sprite.Sprite):  
+class Sprite(pyg.sprite.Sprite):  
     def __init__(self, pos):  
-        pygame.sprite.Sprite.__init__(self)  
-        self.image = pygame.Surface([20, 20])  
+        pyg.sprite.Sprite.__init__(self)  
+        self.image = pyg.Surface([20, 20])  
         self.image.fill((255, 0, 255))  
         self.rect = self.image.get_rect()  
         self.rect.center = pos  
 def main():  
-    pygame.init()  
-    clock = pygame.time.Clock()  
+    pyg.init()  
+    clock = pyg.time.Clock()  
     fps = 50  
     bg = [0, 0, 0]  
     size =[300, 300]  
-    screen = pygame.display.set_mode(size)  
+    screen = pyg.display.set_mode(size)  
     player = Sprite([40, 50])  
     # Define keys for player movement  
-    player.move = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]  
+    player.move = [pyg.K_LEFT, pyg.K_RIGHT, pyg.K_UP, pyg.K_DOWN]  
     player.vx = 5  
     player.vy = 5  
   
     wall = Sprite([100, 60])  
   
-    wall_group = pygame.sprite.Group()  
+    wall_group = pyg.sprite.Group()  
     wall_group.add(wall)  
   
-    player_group = pygame.sprite.Group()  
+    player_group = pyg.sprite.Group()  
     player_group.add(player)  
   
     while True:  
-        for event in pygame.event.get():  
-            if event.type == pygame.QUIT:  
+        for event in pyg.event.get():  
+            if event.type == pyg.QUIT:  
                 return False  
-        key = pygame.key.get_pressed()  
+        key = pyg.key.get_pressed()  
         for i in range(2):  
             if key[player.move[i]]:  
                 player.rect.x += player.vx * [-1, 1][i]  
@@ -45,15 +45,15 @@ def main():
         # first parameter takes a single sprite  
         # second parameter takes sprite groups  
         # third parameter is a kill command if true  
-        hit = pygame.sprite.spritecollide(player, wall_group, True)  
+        hit = pyg.sprite.spritecollide(player, wall_group, True)  
         if hit:  
         # if collision is detected call a function to destroy  
             # rect  
             player.image.fill((255, 255, 255))  
         player_group.draw(screen)  
         wall_group.draw(screen)  
-        pygame.display.update()  
-        clock.tick(fps)  
-    pygame.quit()  
+        pyg.display.update()  
+        clock.tick(fps)  //fps indicates frmes per second
+    pyg.quit()  
     sys.exit  
 if __name__ == '__main__':  
