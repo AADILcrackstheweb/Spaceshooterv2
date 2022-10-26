@@ -10,6 +10,3 @@ Transfer the png files to a folder named assets.
 
 Thank You
 
-Yours sincerely,
-Aadil
-_THE OWNER
