@@ -1,5 +1,5 @@
 # Spaceshooterv2
-An attractive shooter game using pygame
+An attractive shooter game using pygame. It is a simple game where you have to score the highest points
 
 You can use assets as main particles and gameplay characters.
 There is sound required to make the game attractive.
